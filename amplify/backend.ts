@@ -2,14 +2,19 @@ import { defineBackend } from '@aws-amplify/backend';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 
-defineBackend({
+const backend = defineBackend({
   auth,
   data,
 });
 
-// const backend = defineBackend({
-//   data
-// })
+const { cfnUserPool } = backend.auth.resources.cfnResources
+if (Array.isArray(cfnUserPool.schema)) {
+  cfnUserPool.schema.push({
+    name: 'birthday',
+    attributeDataType: 'String',
+    developerOnlyAttribute: false
+  })
+}
 
 // backend.addOutput({
 //   auth: {
