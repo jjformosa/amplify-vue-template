@@ -1,4 +1,4 @@
-import { defineAuth } from '@aws-amplify/backend';
+import { defineAuth, secret } from '@aws-amplify/backend';
 
 /**
  * Define and configure your auth resource
@@ -7,5 +7,18 @@ import { defineAuth } from '@aws-amplify/backend';
 export const auth = defineAuth({
   loginWith: {
     email: true,
+    externalProviders: {
+      oidc: [
+        {
+          name: 'liff-test',
+          clientId: secret('2004822790-ndEy8LlX'),
+          clientSecret: secret('60fe82b27911c81d69f0c8c2fcaf90cf'),
+          issuerUrl:'https://liff.line.me/2004822790-ndEy8LlX',
+          scopes: ['email', 'profile',  'openid']
+        }
+      ],
+      callbackUrls: ['http://localhost:9000', 'https://in-seen.tsaipanmwws.name'],
+      logoutUrls:['http://localhost:9000', 'https://in-seen.tsaipanmwws.name']
+    }
   }
 });
