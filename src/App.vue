@@ -1,28 +1,26 @@
 <script setup lang="ts">
 import { Authenticator } from "@aws-amplify/ui-vue";
+import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-vue/styles.css";
 import { ref } from 'vue'
 import Todos from './components/Todos.vue'
-import { 
-  signIn,
+import {
   signInWithRedirect,
   getCurrentUser,
   fetchUserAttributes,
   updateUserAttribute,
-  autoSignIn,
+  signOut,
   fetchAuthSession,
   rememberDevice,
-  type UpdateUserAttributeOutput } from "aws-amplify/auth";
+  type GetCurrentUserOutput} from "aws-amplify/auth";
 const refEmail = ref("123"), refPwd = ref("321")
+const refCurrentUser = ref<GetCurrentUserOutput | null>(null)
 const login = async () => {
   try {
-    const currentUser = await getCurrentUser()
-    if (currentUser) {
-      console.log(currentUser)
-    } else {
-      // const nextStep = await signIn({ username: refEmail.value, password: refPwd.value })
-      // console.log(nextStep)
-    }
+    refCurrentUser.value = await getCurrentUser()
+    if (refCurrentUser.value) {
+      console.log(refCurrentUser.value)
+    } 
     const attrs = await fetchUserAttributes()
     if (attrs) {
       console.log(attrs)
@@ -38,11 +36,18 @@ const login = async () => {
     console.log(session)
     //await rememberDevice()
   } catch (ex) {
+    console.log(Amplify.getConfig().Auth)
     await signInWithRedirect({
-      provider: { custom: 'liff-tsaifatdev' }
+      provider: { custom: 'liff-test' }
     })
+    // await signIn({ username: refEmail.value, password: refPwd.value })
     console.warn(ex)
   }
+}
+const doLogout = async () => {
+  await signOut({
+    global: true
+  })
 }
 </script>
 
@@ -55,7 +60,12 @@ const login = async () => {
         <button @click="signOut">Sign Out</button>
       </template>
     </authenticator> -->
-    <div>
+    <div v-if="refCurrentUser !== null">
+      <h1>Hello {{refCurrentUser?.signInDetails?.loginId}}'s todos</h1>
+      <Todos />
+      <button @click="doLogout">Sign Out</button>
+    </div>
+    <div v-else>
       <div>
         <input name="mail" v-model="refEmail"/>
       </div>
