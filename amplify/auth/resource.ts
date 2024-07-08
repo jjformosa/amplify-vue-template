@@ -17,8 +17,8 @@ export const auth = defineAuth({
           scopes: ['email', 'profile',  'openid']
         }
       ],
-      callbackUrls: ['http://localhost:9000', 'https://in-seen.tsaipanmwws.name'],
-      logoutUrls:['http://localhost:9000', 'https://in-seen.tsaipanmwws.name']
+      callbackUrls: ['http://localhost:5173', 'https://localhost:9000/', 'https://in-seen.tsaipanmwws.name/'],
+      logoutUrls:['http://localhost:5173', 'https://localhost:9000/', 'https://in-seen.tsaipanmwws.name/']
     }
   }
 });
