@@ -33,9 +33,9 @@ const login = async () => {
     console.log(refCurrentUser.value)
   } catch (ex) {
     console.log(Amplify.getConfig().Auth)
-    // await signInWithRedirect({
-    //   provider: { custom: 'liff-tsaipandev' }
-    // })
+    await signInWithRedirect({
+      provider: { custom: 'liff-tsaipandev' }
+    })
     console.warn(ex)
     // await signIn({ username: refEmail.value, password: refPwd.value })
   }
