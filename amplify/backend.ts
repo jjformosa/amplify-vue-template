@@ -46,5 +46,6 @@ backend.addOutput({
     "aws_region": "us-east-1",
     "api_key": "da2-mohsw5m53fcmjpdnn5fje45n7i",
     "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
+    "authorization_types": ["API_KEY", "AWS_IAM"]
   }
 })
