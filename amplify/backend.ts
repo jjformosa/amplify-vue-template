@@ -1,11 +1,12 @@
 import { defineBackend } from '@aws-amplify/backend';
 // import { auth } from './auth/resource';
-import { data } from './data/resource';
+// import { data } from './data/resource';
 
-const backend = defineBackend({
-  // auth,
-  data,
-});
+// const backend = defineBackend({
+//   data
+// });
+
+const backend = defineBackend({})
 
 // const { cfnUserPool } = backend.auth.resources.cfnResources
 // if (Array.isArray(cfnUserPool.schema)) {
@@ -39,5 +40,11 @@ backend.addOutput({
       "require_symbols": true
     },
     "unauthenticated_identities_enabled": true
+  },
+  data: {
+    "url": "https://y7gtttuhenblvemiqc7tsr6t3i.appsync-api.us-east-1.amazonaws.com/graphql",
+    "aws_region": "us-east-1",
+    "api_key": "da2-mohsw5m53fcmjpdnn5fje45n7i",
+    "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
   }
 })
