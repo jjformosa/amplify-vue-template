@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Authenticator } from "@aws-amplify/ui-vue";
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-vue/styles.css";
 import { ref } from 'vue'
@@ -8,18 +7,16 @@ import {
   signInWithRedirect,
   getCurrentUser,
   fetchUserAttributes,
-  updateUserAttribute,
   signOut,
   fetchAuthSession,
-  rememberDevice,
-  type GetCurrentUserOutput} from "aws-amplify/auth";
+  type AuthSession} from "aws-amplify/auth";
 const refEmail = ref("123"), refPwd = ref("321")
-const refCurrentUser = ref<GetCurrentUserOutput | null>(null)
+const refCurrentUser = ref<AuthSession | null>(null)
 const login = async () => {
   try {
-    refCurrentUser.value = await getCurrentUser()
-    if (refCurrentUser.value) {
-      console.log(refCurrentUser.value)
+    const currentUser = await getCurrentUser()
+    if (currentUser) {
+      console.log(currentUser)
     } 
     const attrs = await fetchUserAttributes()
     if (attrs) {
@@ -32,16 +29,15 @@ const login = async () => {
       // })
       // console.log(updateAttrNextStep)
     }
-    const session = await fetchAuthSession()
-    console.log(session)
-    //await rememberDevice()
+    refCurrentUser.value = await fetchAuthSession()
+    console.log(refCurrentUser.value)
   } catch (ex) {
     console.log(Amplify.getConfig().Auth)
     await signInWithRedirect({
-      provider: { custom: 'liff-test' }
+      provider: { custom: 'liff-tsaipandev' }
     })
-    // await signIn({ username: refEmail.value, password: refPwd.value })
     console.warn(ex)
+    // await signIn({ username: refEmail.value, password: refPwd.value })
   }
 }
 const doLogout = async () => {
@@ -61,9 +57,8 @@ const doLogout = async () => {
       </template>
     </authenticator> -->
     <div v-if="refCurrentUser !== null">
-      <h1>Hello {{refCurrentUser?.signInDetails?.loginId}}'s todos</h1>
+      <h1>Hello {{refCurrentUser?.userSub}}'s todos</h1>
       <Todos />
-      <button @click="doLogout">Sign Out</button>
     </div>
     <div v-else>
       <div>
@@ -73,6 +68,7 @@ const doLogout = async () => {
         <input name="pwd" v-model="refPwd"/>
       </div>
       <button type="button" @click="login">login</button>
+      <button @click="doLogout">Sign Out</button>
     </div>
   </main>
 </template>

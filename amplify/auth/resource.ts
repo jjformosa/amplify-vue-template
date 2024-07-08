@@ -11,8 +11,8 @@ export const auth = defineAuth({
       oidc: [
         {
           name: 'liff-test',
-          clientId: secret('2004822790'),
-          clientSecret: secret('60fe82b27911c81d69f0c8c2fcaf90cf'),
+          clientId: secret('line-login-id'),
+          clientSecret: secret('line-login-secret'),
           issuerUrl:'https://access.line.me/',
           scopes: ['email', 'profile',  'openid']
         }
