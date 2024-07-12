@@ -1,4 +1,4 @@
-import { defineAuth, secret } from '@aws-amplify/backend';
+import { defineAuth, secret } from '@aws-amplify/backend'
 
 /**
  * Define and configure your auth resource
@@ -13,7 +13,7 @@ export const auth = defineAuth({
           name: 'liff-test',
           clientId: secret('line-login-id'),
           clientSecret: secret('line-login-secret'),
-          issuerUrl:'https://access.line.me/',
+          issuerUrl:'https://access.line.me',
           scopes: ['email', 'profile',  'openid']
         }
       ],
@@ -21,4 +21,4 @@ export const auth = defineAuth({
       logoutUrls:['http://localhost:5173', 'https://localhost:9000/', 'https://in-seen.tsaipanmwws.name/']
     }
   }
-});
+})
