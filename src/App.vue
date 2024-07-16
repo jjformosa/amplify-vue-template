@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Amplify } from "aws-amplify";
+import { Authenticator } from "@aws-amplify/ui-vue"
 import "@aws-amplify/ui-vue/styles.css";
 import { ref } from 'vue'
 import Todos from './components/Todos.vue'
@@ -9,7 +10,7 @@ import {
   fetchUserAttributes,
   signOut,
   fetchAuthSession,
-  type AuthSession} from "aws-amplify/auth";
+  type AuthSession } from "aws-amplify/auth";
 const refEmail = ref("123"), refPwd = ref("321")
 const refCurrentUser = ref<AuthSession | null>(null)
 const login = async () => {
@@ -49,13 +50,13 @@ const doLogout = async () => {
 
 <template>
   <main>
-    <!-- <authenticator>
+    <authenticator>
       <template v-slot="{ user, signOut }">
         <h1>Hello {{user?.signInDetails?.loginId}}'s todos</h1>
         <Todos />
         <button @click="signOut">Sign Out</button>
       </template>
-    </authenticator> -->
+    </authenticator>
     <div v-if="refCurrentUser !== null">
       <h1>Hello {{refCurrentUser?.userSub}}'s todos</h1>
       <Todos />
