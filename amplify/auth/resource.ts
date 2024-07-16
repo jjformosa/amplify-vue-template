@@ -1,4 +1,5 @@
 import { defineAuth, secret } from '@aws-amplify/backend'
+import preAuthentication from '../functions/auth/preAuthentication/resource'
 
 export const auth = defineAuth({
   loginWith: {
@@ -16,5 +17,8 @@ export const auth = defineAuth({
       callbackUrls: ['http://localhost:5173', 'https://localhost:9000/', 'https://in-seen.tsaipanmwws.name/'],
       logoutUrls:['http://localhost:5173', 'https://localhost:9000/', 'https://in-seen.tsaipanmwws.name/']
     }
+  },
+  triggers: {
+    preAuthentication: preAuthentication
   }
 })
