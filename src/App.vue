@@ -3,7 +3,6 @@ import { Amplify } from "aws-amplify";
 import { Authenticator } from "@aws-amplify/ui-vue"
 import "@aws-amplify/ui-vue/styles.css";
 import { ref } from 'vue'
-import Todos from './components/Todos.vue'
 import {
   signInWithRedirect,
   getCurrentUser,
@@ -53,13 +52,11 @@ const doLogout = async () => {
     <authenticator>
       <template v-slot="{ user, signOut }">
         <h1>Hello {{user?.signInDetails?.loginId}}'s todos</h1>
-        <Todos />
         <button @click="signOut">Sign Out</button>
       </template>
     </authenticator>
     <div v-if="refCurrentUser !== null">
       <h1>Hello {{refCurrentUser?.userSub}}'s todos</h1>
-      <Todos />
     </div>
     <div v-else>
       <div>
