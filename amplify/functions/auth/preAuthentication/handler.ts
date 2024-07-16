@@ -1,4 +1,4 @@
-import { PreAuthenticationTriggerHandler } from 'aws-lambda'
+import { type PreAuthenticationTriggerHandler } from 'aws-lambda'
 import AWS from 'aws-sdk'
 
 const cognitClient = new AWS.CognitoIdentityServiceProvider()
