@@ -32,7 +32,6 @@ const login = async () => {
     refCurrentUser.value = await fetchAuthSession()
     console.log(refCurrentUser.value)
   } catch (ex) {
-    console.log(Amplify.getConfig().Auth)
     await signInWithRedirect({
       provider: { custom: 'liff-test' }
     })
@@ -49,7 +48,8 @@ const doLogout = async () => {
 
 <template>
   <main>
-    <authenticator>
+    <authenticator :login-mechanisms="['email']"
+      :social-providers="['liff-test']">
       <template v-slot="{ user, signOut }">
         <h1>Hello {{user?.signInDetails?.loginId}}'s todos</h1>
         <button @click="signOut">Sign Out</button>

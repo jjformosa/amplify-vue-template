@@ -16,8 +16,8 @@ export const handler: PreAuthenticationTriggerHandler = async (event) => {
   const listUsersResponse = await cognitClient.listUsers(filterParams).promise()
   if (listUsersResponse.Users && listUsersResponse.Users!.length > 0) {
     let provider = 'line', provider_id = ''
-    if (event.userName.startsWith('Facebook')) provider = 'Facebook', provider_id = ''
-    else if (event.userName.startsWith('Google')) provider = 'Google', provider_id = ''
+    if (userName.startsWith('Facebook')) provider = 'Facebook', provider_id = ''
+    else if (userName.startsWith('Google')) provider = 'Google', provider_id = ''
 
     // 自動確認和驗證用戶
     // event.response = {
@@ -26,6 +26,8 @@ export const handler: PreAuthenticationTriggerHandler = async (event) => {
     // }
     console.log(event.request.validationData)
     console.log(event.request.clientMetadata)
+    console.log(event.request.userAttributes)
+    console.log(event.triggerSource)
     console.log(`find exist user: ${email}`)
   }
   return event

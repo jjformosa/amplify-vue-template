@@ -1,5 +1,6 @@
 import { defineAuth, secret } from '@aws-amplify/backend'
 import preAuthentication from '../functions/auth/preAuthentication/resource'
+import preSignUp from '../functions/auth/preSignUp/resource'
 
 export const auth = defineAuth({
   loginWith: {
@@ -19,6 +20,7 @@ export const auth = defineAuth({
     }
   },
   triggers: {
+    preSignUp: preSignUp,
     preAuthentication: preAuthentication
   }
 })
