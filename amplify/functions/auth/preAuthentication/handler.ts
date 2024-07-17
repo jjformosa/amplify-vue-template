@@ -18,12 +18,15 @@ export const handler: PreAuthenticationTriggerHandler = async (event) => {
     let provider = 'line', provider_id = ''
     if (event.userName.startsWith('Facebook')) provider = 'Facebook', provider_id = ''
     else if (event.userName.startsWith('Google')) provider = 'Google', provider_id = ''
+
     // 自動確認和驗證用戶
-    event.response = {
-      autoConfirmUser: true,
-      autoVerifyEmail: true
-    }
+    // event.response = {
+    //   autoConfirmUser: true,
+    //   autoVerifyEmail: true
+    // }
+    console.log(event.request.validationData)
+    console.log(event.request.clientMetadata)
     console.log(`find exist user: ${email}`)
   }
-  return event;
+  return event
 };
