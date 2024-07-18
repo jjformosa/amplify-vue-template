@@ -1,6 +1,6 @@
 import { type PreAuthenticationTriggerHandler } from 'aws-lambda'
 import AWS from 'aws-sdk'
-import { SignUpInputWithLiff, IdentitySource } from '../line'
+import { type SignUpInputWithLiff, type IdentitySource } from '../line'
 
 const cognitClient = new AWS.CognitoIdentityServiceProvider()
 
