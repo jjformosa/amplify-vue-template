@@ -4,7 +4,7 @@ import { type SignUpInputWithLiff, type IdentitySource } from '../line'
 
 const cognitClient = new AWS.CognitoIdentityServiceProvider()
 
-const signUpByLine = async (signUpInputWithLiff: SignUpInputWithLiff): Promise<AWS.CognitoIdentityServiceProvider.SignUpResponse> => {
+const signUpWithLine = async (signUpInputWithLiff: SignUpInputWithLiff): Promise<AWS.CognitoIdentityServiceProvider.SignUpResponse> => {
   const signUpInput: AWS.CognitoIdentityServiceProvider.SignUpRequest = {
     ClientId: signUpInputWithLiff.clientId,
     Username: signUpInputWithLiff.clientId,
@@ -58,7 +58,7 @@ export const handler: PreAuthenticationTriggerHandler = async (event) => {
           accesstoken: clientMetadata['accesstoken'],
           idToken: clientMetadata['idToken']
         }
-        signUpResponse = await signUpByLine(signUpWithLiff)
+        signUpResponse = await signUpWithLine(signUpWithLiff)
         break
     }
     if (signUpResponse) {
@@ -68,4 +68,4 @@ export const handler: PreAuthenticationTriggerHandler = async (event) => {
     }
   }
   return event
-};
+}
