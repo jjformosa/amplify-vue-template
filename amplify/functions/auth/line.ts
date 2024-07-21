@@ -52,19 +52,14 @@ export const verifyAccessTokenWithLiff = async function (access_token: string, c
   console.log(`liff param: ${client_id}, ${liffSecrect}`)
   if (!client_id || !liffSecrect) return Promise.reject(false)
 
-  const expect_nonce = crypto.randomBytes(16).toString('base64')
   const verifyResponse = await axios.get('https://api.line.me/oauth2/v2.1/verify', {
     params: {
       access_token,
-      client_id,
-      expect_nonce
+      client_id
     }
   })
-  if (verifyResponse.status === 200) {
-    const { nonce, email } = verifyResponse.data
-    if (nonce === expect_nonce && email === client_info.email) {
-      return true
-    }
+  if (verifyResponse.status === 200 && verifyResponse.data.expires_in > 0) {
+    return true
   }
   return false
 }
