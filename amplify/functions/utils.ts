@@ -1,3 +1,4 @@
+
 interface StringMap {
   [name: string]: string;
 }
@@ -8,4 +9,4 @@ export const printEachOfStringMap = function (inputMap: StringMap, objectName? :
        `${name} : ${inputMap[name]}`
     console.log(msg)
   }
-} 
+}

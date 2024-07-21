@@ -22,3 +22,6 @@ export type SignUpInputWithLiff = {
   accesstoken: string,
   idToken: string
 }
+
+export declare function verifyAccessTokenWithLiff(access_token: string, client_info: { email: string }): Promise<boolean>
+export declare function verifyIdTokenWithLiff(id_token: string, client_info: { email: string }): Promise<boolean>
