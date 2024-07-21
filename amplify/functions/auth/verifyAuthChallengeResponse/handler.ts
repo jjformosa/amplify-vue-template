@@ -1,6 +1,6 @@
 import { type VerifyAuthChallengeResponseTriggerHandler } from 'aws-lambda'
 import AWS from 'aws-sdk'
-import { verifyIdTokenWithLiff } from '../line'
+import { verifyAccessTokenWithLiff } from '../line'
 import { printEachOfStringMap } from '../../utils'
 
 const cognitClient = new AWS.CognitoIdentityServiceProvider()
@@ -20,8 +20,8 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   // } else {
   //     event.response.answerCorrect = false
   // }
-  const idToken = event.request.clientMetadata!.accesstoken
+  const access_token = event.request.clientMetadata!.accesstoken
   const email = event.request.challengeAnswer
-  event.response.answerCorrect = await verifyIdTokenWithLiff(idToken, { email })
+  event.response.answerCorrect = await verifyAccessTokenWithLiff(access_token, { email })
   return event
 }

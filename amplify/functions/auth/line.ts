@@ -31,7 +31,7 @@ export const verifyIdTokenWithLiff = async function (id_token: string, client_in
   const verifyResponse = await axios.post('https://api.line.me/oauth2/v2.1/verify', {
     id_token,
     client_id,
-    expect_nonce
+    nonce:expect_nonce
   }, {
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
