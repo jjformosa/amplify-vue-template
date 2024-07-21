@@ -20,8 +20,8 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   // } else {
   //     event.response.answerCorrect = false
   // }
-  const idToken = event.request.clientMetadata!.idToken
+  const accesstoken = event.request.clientMetadata!.accesstoken
   const email = event.request.challengeAnswer
-  event.response.answerCorrect = await verifyAccessTokenWithLiff(idToken, { email })
+  event.response.answerCorrect = await verifyAccessTokenWithLiff(accesstoken, { email })
   return event
 }
