@@ -1,6 +1,25 @@
 import axios from 'axios'
 import crypto from 'crypto'
-import { decodeJWT } from 'aws-amplify/auth'
+
+export type IdentitySource = 'email' | 'liff' | 'lineLogin' | 'google' | 'facebook'
+
+export type PayloadWithLiff = {
+  email: string,
+  name: string,
+  picture: string,
+  sub: string,
+  iss: string,
+  aud: string
+}
+
+export type SignUpInputWithLiff = {
+  clientId: string,
+  email: string,
+  name: string,
+  picture: string,
+  accesstoken: string,
+  idToken: string
+}
 
 export const verifyIdTokenWithLiff = async function (id_token: string, client_info: { email: String }): Promise<boolean> {
   const client_id = process.env.LIFF_ID

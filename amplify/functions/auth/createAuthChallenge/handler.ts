@@ -1,6 +1,5 @@
 import { type CreateAuthChallengeTriggerHandler } from 'aws-lambda'
 import AWS from 'aws-sdk'
-import { type SignUpInputWithLiff, type IdentitySource } from '../line'
 import { printEachOfStringMap } from '../../utils'
 
 const cognitClient = new AWS.CognitoIdentityServiceProvider()
