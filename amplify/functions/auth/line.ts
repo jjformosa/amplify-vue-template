@@ -46,11 +46,9 @@ export const verifyIdTokenWithLiff = async function (id_token: string, client_in
   return false
 }
 
-export const verifyAccessTokenWithLiff = async function (access_token: string, client_info: { email: String }): Promise<boolean> {
+export const verifyAccessTokenWithLiff = async function (access_token: string, client_info: { email: String }): Promise<[boolean, string]> {
   const client_id = process.env.LIFF_ID
-  const liffSecrect = process.env.LIFF_SECRECT
-  console.log(`liff param: ${client_id}, ${liffSecrect}`)
-  if (!client_id || !liffSecrect) return Promise.reject(false)
+  if (!client_id) return [false, 'liff client_id need']
 
   const verifyResponse = await axios.get('https://api.line.me/oauth2/v2.1/verify', {
     params: {
@@ -58,8 +56,11 @@ export const verifyAccessTokenWithLiff = async function (access_token: string, c
       client_id
     }
   })
-  if (verifyResponse.status === 200 && verifyResponse.data.expires_in > 0) {
-    return true
+  if (verifyResponse.status === 200) {
+    // if (verifyResponse.data.expires_in > 0)  // 如果到期，line會回應400
+    return [true, '']
+  } else if (verifyResponse.status === 400) {
+    return [false, verifyResponse.data.error_description]
   }
-  return false
+  return [false, 'line login api fail']
 }
