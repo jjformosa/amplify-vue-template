@@ -63,7 +63,7 @@ export const schemaTopic = a.schema({
   .secondaryIndexes((index) => [index('i18n').queryField('listTopicsByLang')]),
 })
 .authorization(allow => [
-  allow.authenticated().to(['read']),
-  allow.groups(['admin', 'assessment_admin']),
+  // allow.authenticated().to(['read']),
+  // allow.groups(['admin', 'assessment_admin']),
   allow.publicApiKey()
 ])
