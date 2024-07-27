@@ -64,5 +64,6 @@ export const schemaTopic = a.schema({
 })
 .authorization(allow => [
   allow.authenticated().to(['read']),
-  allow.groups(['admin', 'assessment_admin'])
+  allow.groups(['admin', 'assessment_admin']),
+  allow.publicApiKey()
 ])

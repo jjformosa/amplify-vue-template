@@ -10,7 +10,6 @@ export const data = defineData({
     schemas: [schemaTopic, schemaFormPost]
   }, 
   authorizationModes: {
-    // TODO define expires by groups
     defaultAuthorizationMode: 'userPool'
   }
 })
