@@ -10,6 +10,9 @@ export const data = defineData({
     schemas: [schemaTopic, schemaFormPost]
   }, 
   authorizationModes: {
-    defaultAuthorizationMode: 'userPool'
+    defaultAuthorizationMode: 'userPool',
+    apiKeyAuthorizationMode: {
+      expiresInDays: 90
+    }
   }
 })
