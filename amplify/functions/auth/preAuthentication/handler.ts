@@ -17,7 +17,10 @@ const signUpWithLine = async (signUpInputWithLiff: SignUpInputWithLiff): Promise
       { Name: 'custom:line_id_token', Value: signUpInputWithLiff.idToken }
     ]
   }
-  return cognitClient.signUp(signUpInput).promise()
+  const signUpResult = await cognitClient.signUp(signUpInput).promise()
+  console.log('signUpResult')
+  console.log(signUpResult)
+  return signUpResult
 }
 
 export const handler: PreAuthenticationTriggerHandler = async (event) => {
