@@ -58,7 +58,8 @@ export const schemaTopic = a.schema({
   Topic: a.model({
     title: a.string().required().default(''),
     questions: a.hasMany('Question', 'topicId'),
-    i18n: define.geti18n()
+    i18n: define.geti18n(),
+    order: a.integer().default(0).required()
   })
   .secondaryIndexes((index) => [index('i18n').queryField('listTopicsByLang')]),
 })
