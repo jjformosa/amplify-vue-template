@@ -21,6 +21,14 @@ For detailed instructions on deploying your application, refer to the [deploymen
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 
+## Project Memo
+aws amplify id: d2cbfkrtv7urrr
+lambda trigger: amplify-d2cbfkrtv7urrr-*
+cognito user:AjUUm38Mokgf
+identify pool:3FDE84CC_nIaeYOYODar3
+app async:63fk2vxqz5gnrmekfibhzhepei
+dynamodb: ${table}-$63fk2vxqz5gnrmekfibhzhepei-NONE
+
 ## License
 
 This library is licensed under the MIT-0 License. See the LICENSE file.
