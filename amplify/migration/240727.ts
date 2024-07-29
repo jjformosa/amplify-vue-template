@@ -1,6 +1,6 @@
 import doSignIn from "./adminAuth"
 import { generateClient } from 'aws-amplify/data'
-import { SchemaAssessmentTopic } from '../data/resource'
+import type { SchemaAssessmentTopic } from '../data/resource'
 
 const doSomething = async () => {
   await doSignIn()

@@ -28,32 +28,32 @@ export const schemaTopic = a.schema({
     state: a.string().required(),
     degree: a.string().required(),
     i18n: define.geti18n().required(),
-    questionId: a.id(),
-    question: a.belongsTo('Question', 'questionId')
+    question: a.hasMany('Question', 'responseId')
   })
   .secondaryIndexes((index) => [
-    index('i18n').queryField('listResponseByLang'),
-    index('questionId').queryField('listResponseByQuestion')
+    index('i18n').queryField('listResponseByLang')
   ]),
   Scenario: a.model({
     id: a.id().required(),
     scenario: a.string().required(),
     i18n: define.geti18n(),
-    questionId: a.id(),
-    question: a.belongsTo('Question', 'questionId')
+    question: a.hasOne('Question', 'scenarioId')
   })
   .secondaryIndexes((index) => [
     index('i18n').queryField('listScenarioByLang'),
-    index('questionId').queryField('listScenarioByQuestion')
   ]),
   Question: a.model({
-    scenario: a.hasOne('Scenario', 'questionId'),
-    responses: a.hasMany('Response', 'questionId'),
+    scenarioId: a.id().required(),
+    scenario: a.belongsTo('Scenario', 'scenarioId'),
+    responseId: a.id().required(),
+    response: a.belongsTo('Response', 'responseId'),
     topicId: a.id().required(),
     topic: a.belongsTo('Topic', 'topicId')
   })
   .secondaryIndexes((index) => [
-    index('topicId').queryField('listQuestionsByTopic')]
+    index('topicId').queryField('listQuestionsByTopic'),
+    index('scenarioId').queryField('listQuestionsByScenario'),
+    index('responseId').queryField('listQuestionsByResponse')]
   ),
   Topic: a.model({
     title: a.string().required().default(''),
@@ -64,5 +64,6 @@ export const schemaTopic = a.schema({
 })
 .authorization(allow => [
   allow.authenticated().to(['read']),
-  allow.groups(['admin', 'assessment_admin'])
+  allow.groups(['admin', 'assessment_admin']),
+  allow.publicApiKey()
 ])
