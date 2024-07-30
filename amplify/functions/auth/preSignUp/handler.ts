@@ -25,6 +25,7 @@ export const handler: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEv
     }
     const listUsersResponse = await cognitClient.listUsers(filterParams).promise()
     if (listUsersResponse.Users && listUsersResponse.Users!.length > 0) {
+      // TODO 接受多重登入身份
       // TODO 切換provider?
       let provider = 'liff', provider_id = ''
       if (event.userName.startsWith('Facebook')) provider = 'Facebook', provider_id = ''

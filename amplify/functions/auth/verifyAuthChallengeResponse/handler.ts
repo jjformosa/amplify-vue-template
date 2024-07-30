@@ -6,9 +6,10 @@ import { printEachOfStringMap } from '../../utils'
 const cognitClient = new AWS.CognitoIdentityServiceProvider()
 
 export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) => {
-  // if (event.request.clientMetadata) {  // Can Get it
-  //   printEachOfStringMap(event.request.clientMetadata, 'clientMetadata')
-  // }
+  if (event.request.clientMetadata) {  // Can Get it
+    printEachOfStringMap(event.request.clientMetadata, 'clientMetadata')
+  }
+  console.log(event.triggerSource)
   const identitySource = event.request.clientMetadata?.identitySource ?? ""
   // printEachOfStringMap(event.request.userAttributes, 'userAttributes')
   // console.log(event.request.userNotFound ?? 'not found')  // true
@@ -23,7 +24,7 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   // }
   let email, verifyResponse
   const access_token = event.request.clientMetadata?.accesstoken ?? ''
-  if (identitySource === 'liff' && event.request.challengeAnswer === 'CUSTOM_CHALLENGE') {
+  if (identitySource === 'liff') {
     email = event.request.challengeAnswer
     const [response, errMsg] = await verifyAccessTokenWithLiff(access_token, { email })
     if (errMsg) {
