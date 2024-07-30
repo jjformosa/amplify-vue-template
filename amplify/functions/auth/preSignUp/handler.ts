@@ -65,6 +65,7 @@ export const handler: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEv
         }
         event.response.autoConfirmUser = true
         event.response.autoVerifyEmail = true
+        console.log(`create new user: ${event.userName}`)
       }
     }
   } catch (ex) {

@@ -23,12 +23,14 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   // }
   let email, verifyResponse
   const access_token = event.request.clientMetadata?.accesstoken ?? ''
-  if (identitySource === 'liff') {
+  if (identitySource === 'liff' && event.request.challengeAnswer === 'CUSTOM_CHALLENGE') {
     email = event.request.challengeAnswer
     const [response, errMsg] = await verifyAccessTokenWithLiff(access_token, { email })
-    console.log(`login api fail: ${errMsg}`)
-    event.response.answerCorrect = false
-    if (errMsg) return event
+    if (errMsg) {
+      console.log(`login api fail: ${errMsg}`)
+      event.response.answerCorrect = false
+      return event
+    }
     verifyResponse = response
   }
   if (verifyResponse && email) {

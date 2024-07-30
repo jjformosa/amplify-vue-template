@@ -22,9 +22,9 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   const userAttributes = event.request.userAttributes
   const email = userAttributes.email
   if (event.request.challengeName === 'CUSTOM_CHALLENGE') {
-    event.response.publicChallengeParameters = { question: 'What is your favorite color?' };
-    event.response.privateChallengeParameters = { answer: 'blue' };
-    event.response.challengeMetadata = 'CUSTOM_CHALLENGE';
+    event.response.publicChallengeParameters = { question: 'What is your favorite color?' }
+    event.response.privateChallengeParameters = { answer: 'blue' }
+    event.response.challengeMetadata = 'CUSTOM_CHALLENGE'
   }
   return event
 }
