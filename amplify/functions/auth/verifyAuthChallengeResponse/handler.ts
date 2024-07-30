@@ -31,7 +31,7 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
       Filter: `email = "${email}"`
     }
     const listUsersResponse = await cognitClient.listUsers(filterParams).promise()
-    if (listUsersResponse.Users || listUsersResponse.Users!.length === 0) {
+    if (!listUsersResponse.Users || listUsersResponse.Users!.length === 0) {
       const { name, picture } = event.request.clientMetadata!
       const signUpResponse = await cognitClient.adminCreateUser({
         UserPoolId: event.userPoolId,
