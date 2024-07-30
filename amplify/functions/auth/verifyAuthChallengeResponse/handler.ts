@@ -36,7 +36,7 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
       const { name, picture } = event.request.clientMetadata!
       const signUpResponse = await cognitClient.adminCreateUser({
         UserPoolId: event.userPoolId,
-        Username: event.userName,
+        Username: email,
         TemporaryPassword: '1qaz@WSX',
         UserAttributes: [
           { Name: 'email', Value: email },
