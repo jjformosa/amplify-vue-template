@@ -24,29 +24,28 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   const email = event.request.challengeAnswer
   const [verifyResponse, errMsg] = await verifyAccessTokenWithLiff(access_token, { email })
   if (verifyResponse) {
-    // 先檢查email是否存在，不存在要幫使用者註冊
-    const filterParams = {
-      UserPoolId: event.userPoolId,
-      AttributesToGet: ['email'],
-      Filter: `email = "${email}"`
-    }
-    const listUsersResponse = await cognitClient.listUsers(filterParams).promise()
-    if (!listUsersResponse.Users || listUsersResponse.Users!.length === 0) {
-      // TOOD 用正緣觸發
-      const { name, picture } = event.request.clientMetadata!
-      const signUpResponse = await cognitClient.adminCreateUser({
-        UserPoolId: event.userPoolId,
-        Username: email,
-        TemporaryPassword: '1qaz@WSX',
-        UserAttributes: [
-          { Name: 'email', Value: email },
-          { Name: 'name', Value: name },
-          { Name: 'picture', Value: picture }
-        ]
-      }).promise()
-      console.log(`sign up resposne: ${signUpResponse}`)
-    }
-
+    // // 先檢查email是否存在，不存在要幫使用者註冊
+    // const filterParams = {
+    //   UserPoolId: event.userPoolId,
+    //   AttributesToGet: ['email'],
+    //   Filter: `email = "${email}"`
+    // }
+    // const listUsersResponse = await cognitClient.listUsers(filterParams).promise()
+    // if (!listUsersResponse.Users || listUsersResponse.Users!.length === 0) {
+    //   // TOOD 用正緣觸發
+    //   const { name, picture } = event.request.clientMetadata!
+    //   const signUpResponse = await cognitClient.adminCreateUser({
+    //     UserPoolId: event.userPoolId,
+    //     Username: email,
+    //     TemporaryPassword: '1qaz@WSX',
+    //     UserAttributes: [
+    //       { Name: 'email', Value: email },
+    //       { Name: 'name', Value: name },
+    //       { Name: 'picture', Value: picture }
+    //     ]
+    //   }).promise()
+    //   console.log(`sign up resposne: ${signUpResponse}`)
+    // }
     event.response.answerCorrect = true
   } else {
     console.log(`login api fail: ${errMsg}`)
