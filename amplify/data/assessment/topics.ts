@@ -61,7 +61,9 @@ export const schemaTopic = a.schema({
     i18n: define.geti18n(),
     order: a.integer().default(0).required()
   })
-  .secondaryIndexes((index) => [index('i18n').queryField('listTopicsByLang')]),
+  .secondaryIndexes((index) => [
+    index('i18n').queryField('listTopicsByLang').sortKeys(['order'])
+  ]),
 })
 .authorization(allow => [
   allow.authenticated().to(['read']),

@@ -3,10 +3,10 @@ import { Amplify } from 'aws-amplify'
 
 const outputs = {
   "auth": {
-    "user_pool_id": "us-east-1_8M1Vj0JHf",
+    "user_pool_id": "us-east-1_YaB5e8hqy",
     "aws_region": "us-east-1",
-    "user_pool_client_id": "3csf3agfiqt76g1oa6gi1663m9",
-    "identity_pool_id": "us-east-1:35e7edb4-7bae-4c9e-a3eb-4a094021b954",
+    "user_pool_client_id": "2qfs89t652us3rufq1o5m31h9s",
+    "identity_pool_id": "us-east-1:dbdfb6a3-efc2-4db2-bb08-f7b291c39505",
     "standard_required_attributes": [
       "email"
     ],
@@ -45,15 +45,17 @@ const outputs = {
         "profile",
         "aws.cognito.signin.user.admin"
       ],
-      "domain": "425bbe929ea98db95109.auth.us-east-1.amazoncognito.com"
+      "domain": "68e6dd2bcc252d0c79d4.auth.us-east-1.amazoncognito.com"
     },
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://fnzmvkesjfegzpz43koij6c6ta.appsync-api.us-east-1.amazonaws.com/graphql",
+    "url": "https://hls2gamjvzdc5ejvo6ch7brw6a.appsync-api.us-east-1.amazonaws.com/graphql",
     "aws_region": "us-east-1",
+    "api_key": "da2-o45lmgcqundt5iqpe4grfb6yme",
     "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
     "authorization_types": [
+      "API_KEY",
       "AWS_IAM"
     ],
     "model_introspection": {
@@ -90,25 +92,19 @@ const outputs = {
               "isRequired": true,
               "attributes": []
             },
-            "questionId": {
-              "name": "questionId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": false,
-              "attributes": []
-            },
             "question": {
               "name": "question",
-              "isArray": false,
+              "isArray": true,
               "type": {
                 "model": "Question"
               },
               "isRequired": false,
               "attributes": [],
+              "isArrayNullable": true,
               "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "questionId"
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "responseId"
                 ]
               }
             },
@@ -147,16 +143,6 @@ const outputs = {
               }
             },
             {
-              "type": "key",
-              "properties": {
-                "name": "responsesByQuestionId",
-                "queryField": "listResponseByQuestion",
-                "fields": [
-                  "questionId"
-                ]
-              }
-            },
-            {
               "type": "auth",
               "properties": {
                 "rules": [
@@ -174,6 +160,16 @@ const outputs = {
                       "admin",
                       "assessment_admin"
                     ],
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
                     "operations": [
                       "create",
                       "update",
@@ -215,13 +211,6 @@ const outputs = {
               "isRequired": false,
               "attributes": []
             },
-            "questionId": {
-              "name": "questionId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": false,
-              "attributes": []
-            },
             "question": {
               "name": "question",
               "isArray": false,
@@ -231,10 +220,11 @@ const outputs = {
               "isRequired": false,
               "attributes": [],
               "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "questionId"
-                ]
+                "connectionType": "HAS_ONE",
+                "associatedWith": [
+                  "scenarioId"
+                ],
+                "targetNames": []
               }
             },
             "createdAt": {
@@ -280,16 +270,6 @@ const outputs = {
               }
             },
             {
-              "type": "key",
-              "properties": {
-                "name": "scenariosByQuestionId",
-                "queryField": "listScenarioByQuestion",
-                "fields": [
-                  "questionId"
-                ]
-              }
-            },
-            {
               "type": "auth",
               "properties": {
                 "rules": [
@@ -307,6 +287,16 @@ const outputs = {
                       "admin",
                       "assessment_admin"
                     ],
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
                     "operations": [
                       "create",
                       "update",
@@ -334,6 +324,13 @@ const outputs = {
               "isRequired": true,
               "attributes": []
             },
+            "scenarioId": {
+              "name": "scenarioId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
             "scenario": {
               "name": "scenario",
               "isArray": false,
@@ -343,26 +340,31 @@ const outputs = {
               "isRequired": false,
               "attributes": [],
               "association": {
-                "connectionType": "HAS_ONE",
-                "associatedWith": [
-                  "questionId"
-                ],
-                "targetNames": []
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "scenarioId"
+                ]
               }
             },
-            "responses": {
-              "name": "responses",
-              "isArray": true,
+            "responseId": {
+              "name": "responseId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "response": {
+              "name": "response",
+              "isArray": false,
               "type": {
                 "model": "Response"
               },
               "isRequired": false,
               "attributes": [],
-              "isArrayNullable": true,
               "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "questionId"
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "responseId"
                 ]
               }
             },
@@ -415,6 +417,26 @@ const outputs = {
             {
               "type": "key",
               "properties": {
+                "name": "questionsByScenarioId",
+                "queryField": "listQuestionsByScenario",
+                "fields": [
+                  "scenarioId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "questionsByResponseId",
+                "queryField": "listQuestionsByResponse",
+                "fields": [
+                  "responseId"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
                 "name": "questionsByTopicId",
                 "queryField": "listQuestionsByTopic",
                 "fields": [
@@ -440,6 +462,16 @@ const outputs = {
                       "admin",
                       "assessment_admin"
                     ],
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
                     "operations": [
                       "create",
                       "update",
@@ -549,6 +581,16 @@ const outputs = {
                       "admin",
                       "assessment_admin"
                     ],
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  },
+                  {
+                    "allow": "public",
+                    "provider": "apiKey",
                     "operations": [
                       "create",
                       "update",
