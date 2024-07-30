@@ -9,6 +9,7 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   // if (event.request.clientMetadata) {  // Can Get it
   //   printEachOfStringMap(event.request.clientMetadata, 'clientMetadata')
   // }
+  const identitySource = event.request.clientMetadata?.identitySource ?? ""
   // printEachOfStringMap(event.request.userAttributes, 'userAttributes')
   // console.log(event.request.userNotFound ?? 'not found')  // true
   // console.log(event.triggerSource)  // VerifyAuthChallengeResponse_Authentication
@@ -20,35 +21,44 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   // } else {
   //     event.response.answerCorrect = false
   // }
-  const access_token = event.request.clientMetadata!.accesstoken
-  const email = event.request.challengeAnswer
-  const [verifyResponse, errMsg] = await verifyAccessTokenWithLiff(access_token, { email })
-  if (verifyResponse) {
-    // // 先檢查email是否存在，不存在要幫使用者註冊
-    // const filterParams = {
-    //   UserPoolId: event.userPoolId,
-    //   AttributesToGet: ['email'],
-    //   Filter: `email = "${email}"`
-    // }
-    // const listUsersResponse = await cognitClient.listUsers(filterParams).promise()
-    // if (!listUsersResponse.Users || listUsersResponse.Users!.length === 0) {
-    //   // TOOD 用正緣觸發
-    //   const { name, picture } = event.request.clientMetadata!
-    //   const signUpResponse = await cognitClient.adminCreateUser({
-    //     UserPoolId: event.userPoolId,
-    //     Username: email,
-    //     TemporaryPassword: '1qaz@WSX',
-    //     UserAttributes: [
-    //       { Name: 'email', Value: email },
-    //       { Name: 'name', Value: name },
-    //       { Name: 'picture', Value: picture }
-    //     ]
-    //   }).promise()
-    //   console.log(`sign up resposne: ${signUpResponse}`)
-    // }
+  let email, verifyResponse
+  const access_token = event.request.clientMetadata?.accesstoken ?? ''
+  if (identitySource === 'liff') {
+    email = event.request.challengeAnswer
+    const [response, errMsg] = await verifyAccessTokenWithLiff(access_token, { email })
+    console.log(`login api fail: ${errMsg}`)
+    event.response.answerCorrect = false
+    if (errMsg) return event
+    verifyResponse = response
+  }
+  if (verifyResponse && email) {
+    // 先檢查email是否存在，不存在要幫使用者註冊
+    const filterParams = {
+      UserPoolId: event.userPoolId,
+      AttributesToGet: ['email'],
+      Filter: `email = "${email}"`
+    }
+    const listUsersResponse = await cognitClient.listUsers(filterParams).promise()
+    if (!listUsersResponse.Users || listUsersResponse.Users!.length === 0) {
+      // TOOD 用正緣觸發
+      const { name, picture } = event.request.clientMetadata!
+      const signUpResponse = await cognitClient.adminCreateUser({
+        UserPoolId: event.userPoolId,
+        Username: email,
+        TemporaryPassword: '2wsx!QAZ',
+        UserAttributes: [
+          { Name: 'email', Value: email },
+          { Name: 'name', Value: name },
+          { Name: 'picture', Value: picture }
+        ],
+        ClientMetadata: {
+          identitySource
+        }
+      }).promise()
+      console.log(`sign up resposne: ${signUpResponse}`)
+    }
     event.response.answerCorrect = true
   } else {
-    console.log(`login api fail: ${errMsg}`)
     event.response.answerCorrect = false
   }
   return event

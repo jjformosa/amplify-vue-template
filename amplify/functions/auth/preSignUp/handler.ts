@@ -12,11 +12,11 @@ export const handler: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEv
   console.log(event.userPoolId)
   try {
     const attributes = event.request.userAttributes
-    console.log(`sttributes: ${attributes}`)
+    // console.log(`sttributes: ${attributes}`)
     const clientMetadata = event.request.clientMetadata ?? {}
-    console.log(`clientMetadata: ${clientMetadata}`)
-    const validationData = event.request.validationData ?? {}
-    console.log(`validationData: ${validationData}`)
+    // console.log(`clientMetadata: ${clientMetadata}`)
+    // const validationData = event.request.validationData ?? {}
+    // console.log(`validationData: ${validationData}`)
     const email = attributes.email
     const filterParams = {
       UserPoolId: event.userPoolId,
@@ -26,14 +26,14 @@ export const handler: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEv
     const listUsersResponse = await cognitClient.listUsers(filterParams).promise()
     if (listUsersResponse.Users && listUsersResponse.Users!.length > 0) {
       // TODO 切換provider?
-      let provider = 'line', provider_id = ''
+      let provider = 'liff', provider_id = ''
       if (event.userName.startsWith('Facebook')) provider = 'Facebook', provider_id = ''
       else if (event.userName.startsWith('Google')) provider = 'Google', provider_id = ''
       // TODO 覆寫attributes
       // 如果用戶已存在，則更新其identities屬性
       const existingUser = listUsersResponse.Users[0]
       const existingSub = existingUser.Username ?? email
-
+      
       const updateUserAttributesParams = {
         UserPoolId: event.userPoolId,
         Username: existingSub,
@@ -50,6 +50,22 @@ export const handler: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEv
       event.response.autoConfirmUser = true
       event.response.autoVerifyEmail = true
       console.log(`find exist user: ${email}, userStatus ${existingUser.UserStatus ?? 'unkown'}`)
+    } else {
+      if (event.triggerSource === 'PreSignUp_AdminCreateUser') {
+        switch(clientMetadata.identitysource) {
+          case 'liff':
+            event.userName = email
+            break
+          case 'facebook':
+            break
+          case 'google':
+            break
+          default:
+            break
+        }
+        event.response.autoConfirmUser = true
+        event.response.autoVerifyEmail = true
+      }
     }
   } catch (ex) {
     console.log(`preSignUp error: ${ex}`)
