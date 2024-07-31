@@ -28,19 +28,21 @@ export const schemaTopic = a.schema({
     state: a.string().required(),
     degree: a.string().required(),
     i18n: define.geti18n().required(),
-    question: a.hasMany('Question', 'responseId')
+    question: a.hasMany('Question', 'responseId'),
+    order: a.integer().default(0)
   })
   .secondaryIndexes((index) => [
-    index('i18n').queryField('listResponseByLang')
+    index('i18n').queryField('listResponseByLang').sortKeys(['order'])
   ]),
   Scenario: a.model({
     id: a.id().required(),
     scenario: a.string().required(),
     i18n: define.geti18n(),
-    question: a.hasOne('Question', 'scenarioId')
+    question: a.hasOne('Question', 'scenarioId'),
+    order: a.integer().default(0)
   })
   .secondaryIndexes((index) => [
-    index('i18n').queryField('listScenarioByLang'),
+    index('i18n').queryField('listScenarioByLang').sortKeys(['order']),
   ]),
   Question: a.model({
     scenarioId: a.id().required(),

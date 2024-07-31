@@ -983,26 +983,11 @@ const doSomething = async () => {
   const clientAssessmentTopic = generateClient<SchemaAssessmentTopic>({
     authMode: 'apiKey'
   })
-  responses.map((_response) => {
-    console.log(_response)
-  })
-  // const responseResult = await Promise.all(
-  //   responses.map((_response) => clientAssessmentTopic.models.Response.create({ ..._response, i18n: 'zh-tw' }))
-  // )
-  // console.log(responseResult)
-  // const _topic1 = await clientAssessmentTopic.models.Topic.create({ ...topic1 })
-  // if (_topic1.data) {
-  //   const scenarioResult = await Promise.all(
-  //     scenarios1.map((_scenario) => clientAssessmentTopic.models.Scenario.create({ ..._scenario }))
-  //   )
-  //   for (const sIndex in scenarioResult) {
-  //     for (const rIndex in responseResult) {
-  //       clientAssessmentTopic.models.Question.create({ topicId: _topic1.data.id, scenarioId: scenarioResult[sIndex].data!.id, responseId: responseResult[rIndex].data!.id })
-  //     }
-  //   }
-  // }
+  const responseResult = (await clientAssessmentTopic.models.Response.list()).data
+  console.log(`response length: ${responseResult.length}`)
+  const topicResult = (await clientAssessmentTopic.models.Topic.list()).data 
+  console.log(`topic length: ${topicResult.length}`) 
+  
 }
 
 doSomething()
-
-export default doSomething
