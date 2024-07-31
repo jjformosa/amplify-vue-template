@@ -109,6 +109,13 @@ const outputs = {
                 ]
               }
             },
+            "order": {
+              "name": "order",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -136,10 +143,11 @@ const outputs = {
             {
               "type": "key",
               "properties": {
-                "name": "responsesByI18n",
+                "name": "responsesByI18nAndOrder",
                 "queryField": "listResponseByLang",
                 "fields": [
-                  "i18n"
+                  "i18n",
+                  "order"
                 ]
               }
             },
@@ -228,6 +236,13 @@ const outputs = {
                 "targetNames": []
               }
             },
+            "order": {
+              "name": "order",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -263,10 +278,11 @@ const outputs = {
             {
               "type": "key",
               "properties": {
-                "name": "scenariosByI18n",
+                "name": "scenariosByI18nAndOrder",
                 "queryField": "listScenarioByLang",
                 "fields": [
-                  "i18n"
+                  "i18n",
+                  "order"
                 ]
               }
             },
@@ -530,6 +546,13 @@ const outputs = {
               "isRequired": false,
               "attributes": []
             },
+            "order": {
+              "name": "order",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": true,
+              "attributes": []
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -557,10 +580,11 @@ const outputs = {
             {
               "type": "key",
               "properties": {
-                "name": "topicsByI18n",
+                "name": "topicsByI18nAndOrder",
                 "queryField": "listTopicsByLang",
                 "fields": [
-                  "i18n"
+                  "i18n",
+                  "order"
                 ]
               }
             },
@@ -955,7 +979,7 @@ const scenarios3 = [
   { scenario: '0.01的進步也是進步，有人因我的一句話或行為，改變他的所思所想，我功德圓滿了。' },
   { scenario: '當下就是完整，想開始就開始，想休息就休息，我隨性自在，一切都值得而且配得。' }
 ]
-const scenario4 = [
+const scenarios4 = [
   { scenario: '人不為己天誅地滅，全世界的人都把自己權利顧好，天下自然太平，愛惜自己萬萬歲。' },
   { scenario: '人都有會感受，在意別人的眼光很正常！代表我們有同理心，高敏細膩是很有力量的。' },
   { scenario: '開心就會笑、難過就會哭！我們與生俱來的天賦和學習力，能夠讓生活精彩又有價值。' },
@@ -983,11 +1007,62 @@ const doSomething = async () => {
   const clientAssessmentTopic = generateClient<SchemaAssessmentTopic>({
     authMode: 'apiKey'
   })
-  const responseResult = (await clientAssessmentTopic.models.Response.list()).data
+  const responseResult = (await clientAssessmentTopic.models.Response.list()).data.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
   console.log(`response length: ${responseResult.length}`)
-  const topicResult = (await clientAssessmentTopic.models.Topic.list()).data 
-  console.log(`topic length: ${topicResult.length}`) 
-  
+  const topicResult = (await clientAssessmentTopic.models.Topic.list()).data.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+  let q = await topicResult[0].questions({ limit: 70 })
+  do {
+    console.log(`topic1 length: ${q.data.length}`)
+    q = (await topicResult[0].questions({ nextToken: q.nextToken }))
+  } while (q.nextToken)
+
+  q = await topicResult[1].questions()
+  do {
+    console.log(`topic2 length: ${q.data.length}`)
+    q = (await topicResult[1].questions({ nextToken: q.nextToken }))
+  } while (q.nextToken)
+
+  q = await topicResult[2].questions({ nextToken: q.nextToken })
+  do {
+    console.log(`topic3 length: ${q.data.length}`)
+    q = (await topicResult[2].questions({ nextToken: q.nextToken }))
+  } while (q.nextToken)
+
+  q = await topicResult[3].questions()
+  do {
+    console.log(`topic4 length: ${q.data.length}`)
+    q = (await topicResult[3].questions({ nextToken: q.nextToken }))
+  } while (q.nextToken)
+  // const scenarios4Result = await Promise.all(scenarios4.map(async (scenarioData, index) => {
+  //   return (await clientAssessmentTopic.models.Scenario.create({
+  //     scenario: scenarioData.scenario,
+  //     order: index
+  //   })).data
+  // }))
+  // for (const scenarioData of scenarios4Result) {
+  //   for (const responseData of responseResult) {
+  //     await clientAssessmentTopic.models.Question.create({
+  //       topicId: topicResult[3].id,
+  //       scenarioId: scenarioData!.id,
+  //       responseId: responseData!.id
+  //     })
+  //   }
+  // }
+  console.log('handle topic2 done')
+
+  // const scenario1 = ((await question1[0].scenario()).data)
+  // console.log(scenario1?.scenario)
+  // const scenario35 = ((await question1[34].scenario()).data)
+  // console.log(scenario35?.scenario)
+  // const scenario50 = ((await question1[49].scenario()).data)
+  // console.log(scenario50?.scenario)
+  // const response50 = ((await question1[49].response()).data)
+  // console.log(`${response50?.degree}, ${response50?.state}`)
+
+  // const scenario51 = ((await question1[50].scenario()).data)
+  // console.log(scenario51?.scenario)
+  // const response51 = ((await question1[50].response()).data)
+  // console.log(`${response50?.degree}, ${response51?.state}`)
 }
 
 doSomething()
