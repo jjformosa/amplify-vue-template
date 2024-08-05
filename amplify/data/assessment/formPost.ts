@@ -13,12 +13,12 @@ export const schemaFormPost = a.schema({
     id: a.id().required(),
     state: a.string().required(),
     degree: a.string().required(),
-    order: a.integer().default(0)
+    order: a.integer()
   }),
   FormScenario: a.customType({
     id: a.id().required(),
     scenario: a.string().required(),
-    order: a.integer().default(0)
+    order: a.integer()
   }),
   FormQuestion: a.customType({
     id: a.id().required(),
