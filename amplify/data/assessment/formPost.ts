@@ -12,11 +12,13 @@ export const schemaFormPost = a.schema({
   FormResponse: a.customType({
     id: a.id().required(),
     state: a.string().required(),
-    degree: a.string().required()
+    degree: a.string().required(),
+    order: a.integer().default(0)
   }),
   FormScenario: a.customType({
     id: a.id().required(),
-    scenario: a.string().required()
+    scenario: a.string().required(),
+    order: a.integer().default(0)
   }),
   FormQuestion: a.customType({
     id: a.id().required(),
@@ -24,16 +26,16 @@ export const schemaFormPost = a.schema({
     responses: a.ref('FormResponse').array(),
   }),
   Part1Answer: a.customType({
-    questionId: a.id().required(),
-    responseId: a.id().array(),
+    scenarioId: a.string().required(),
+    responseId: a.string().required(),
   }),
   Part2Answer: a.customType({
-    questionId: a.id().required(),
-    scenarioId: a.json(),
+    scenarioId: a.string().array(),
   }),
   FormTopic: a.customType({
     id: a.id().required(),
     title: a.string(),
+    order: a.integer(),
     questions: a.ref('FormQuestion').array(),
     part1: a.ref('Part1Answer').array(),
     part2: a.ref('Part2Answer').array()
