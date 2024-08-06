@@ -1,4 +1,4 @@
-import { a, defineData } from '@aws-amplify/backend'
+import { a } from '@aws-amplify/backend'
 import * as define from '../define'
 // import { TypeScenario, TypeResponse, TypeTopic } from './topics'
 
@@ -44,7 +44,7 @@ export const schemaFormPost = a.schema({
     topic: a.ref('FormTopic').array(),
     i18n: define.geti18n(),
     isCompleted: a.boolean().default(false),
-    assessor: a.string(),
+    assessor: a.string().array(),
     assessee: a.string()
   })
   .secondaryIndexes((index) => [
