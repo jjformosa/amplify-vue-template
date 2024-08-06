@@ -43,7 +43,9 @@ export const schemaFormPost = a.schema({
   AssessmentForm: a.model({
     topic: a.ref('FormTopic').array(),
     i18n: define.geti18n(),
-    isCompleted: a.boolean().default(false)
+    isCompleted: a.boolean().default(false),
+    assessor: a.string(),
+    assessee: a.string()
   })
   .secondaryIndexes((index) => [
     index('i18n').queryField('listByLang')]
