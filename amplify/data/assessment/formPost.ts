@@ -53,7 +53,7 @@ export const schemaFormPost = a.schema({
 })
 .authorization(allow => [
   allow.groups(['customer_service_admin', 'admin']).to(['read']),
-  allow.groupDefinedIn('assessor').to(['read']),
+  allow.ownersDefinedIn('assessor').to(['read']),
   allow.owner().to(['read']),
-  allow.groupDefinedIn('assessee')
+  allow.ownerDefinedIn('assessee')
 ])
