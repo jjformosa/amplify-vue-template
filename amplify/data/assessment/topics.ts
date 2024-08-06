@@ -28,34 +28,34 @@ export const schemaTopic = a.schema({
     state: a.string().required(),
     degree: a.string().required(),
     i18n: define.geti18n().required(),
-    question: a.hasMany('Question', 'responseId'),
+    questionId: a.string(),
+    question: a.belongsTo('Question', 'questionId'),
     order: a.integer().default(0)
   })
   .secondaryIndexes((index) => [
-    index('i18n').queryField('listResponseByLang').sortKeys(['order'])
+    index('i18n').queryField('listResponseByLang').sortKeys(['order']),
+    index('questionId').queryField('listResponseByQuestion')
   ]),
   Scenario: a.model({
     id: a.id().required(),
     scenario: a.string().required(),
     i18n: define.geti18n(),
-    question: a.hasOne('Question', 'scenarioId'),
+    questionId: a.string(),
+    question: a.belongsTo('Question', 'questionId'),
     order: a.integer().default(0)
   })
   .secondaryIndexes((index) => [
     index('i18n').queryField('listScenarioByLang').sortKeys(['order']),
+    index('questionId').queryField('listScenarioByQuestion')
   ]),
   Question: a.model({
-    scenarioId: a.id().required(),
-    scenario: a.belongsTo('Scenario', 'scenarioId'),
-    responseId: a.id().required(),
-    response: a.belongsTo('Response', 'responseId'),
+    scenario: a.hasOne('Scenario', 'scenarioId'),
+    response: a.hasMany('Response', 'responseId'),
     topicId: a.id().required(),
     topic: a.belongsTo('Topic', 'topicId')
   })
   .secondaryIndexes((index) => [
-    index('topicId').queryField('listQuestionsByTopic'),
-    index('scenarioId').queryField('listQuestionsByScenario'),
-    index('responseId').queryField('listQuestionsByResponse')]
+    index('topicId').queryField('listQuestionsByTopic')]
   ),
   Topic: a.model({
     title: a.string().required().default(''),
