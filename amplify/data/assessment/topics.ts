@@ -49,8 +49,8 @@ export const schemaTopic = a.schema({
     index('questionId').queryField('listScenarioByQuestion')
   ]),
   Question: a.model({
-    scenario: a.hasOne('Scenario', 'scenarioId'),
-    response: a.hasMany('Response', 'responseId'),
+    scenario: a.hasOne('Scenario', 'questionId'),
+    response: a.hasMany('Response', 'questionId'),
     topicId: a.id().required(),
     topic: a.belongsTo('Topic', 'topicId')
   })
