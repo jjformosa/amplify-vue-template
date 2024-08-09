@@ -50,7 +50,7 @@ export const schemaTopic = a.schema({
   ListResponsesByQuestion: a.query()
   .arguments({ 
     questionId: a.string().required(),
-    i18n: a.string().default('zh_tw').required()
+    i18n: a.string().required()
    })
   .returns(a.ref('Response').array())
   .authorization(allow => [
