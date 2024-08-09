@@ -68,10 +68,6 @@ export const schemaTopic = a.schema({
   .arguments({
     questionId: a.string().required()
   })
-  .handler(a.handler.custom({
-    dataSource: a.ref('Response'),
-    entry: '../../functions/data/searchResponseByQuestoinId.ts'
-  }))
 })
 .authorization(allow => [
   allow.authenticated().to(['read']),
