@@ -28,13 +28,11 @@ export const schemaTopic = a.schema({
     state: a.string().required(),
     degree: a.string().required(),
     i18n: define.geti18n().required(),
-    questionId: a.string(),
-    question: a.belongsTo('Question', 'questionId'),
+    questions: a.string().array(),
     order: a.integer().default(0)
   })
   .secondaryIndexes((index) => [
-    index('i18n').queryField('listResponseByLang').sortKeys(['order']),
-    index('questionId').queryField('listResponseByQuestion')
+    index('i18n').queryField('listResponseByLang').sortKeys(['order'])
   ]),
   Scenario: a.model({
     id: a.id().required(),
@@ -50,7 +48,7 @@ export const schemaTopic = a.schema({
   ]),
   Question: a.model({
     scenario: a.hasOne('Scenario', 'questionId'),
-    response: a.hasMany('Response', 'questionId'),
+    response: a.string().array(),
     topicId: a.id().required(),
     topic: a.belongsTo('Topic', 'topicId')
   })
@@ -66,6 +64,14 @@ export const schemaTopic = a.schema({
   .secondaryIndexes((index) => [
     index('i18n').queryField('listTopicsByLang').sortKeys(['order'])
   ]),
+  searchResponseByQuestionId: a.query()
+  .arguments({
+    questionId: a.string().required()
+  })
+  .handler(a.handler.custom({
+    dataSource: a.ref('Response'),
+    entry: '../../functions/data/searchResponseByQuestoinId.ts'
+  }))
 })
 .authorization(allow => [
   allow.authenticated().to(['read']),

@@ -1,6 +1,7 @@
 import { generateClient } from 'aws-amplify/data'
 import type { SchemaAssessmentTopic } from '../data/resource'
 import { Amplify } from 'aws-amplify'
+// import outputs from '../../amplify_outputs.json'
 
 const outputs = {
   "auth": {
@@ -93,19 +94,25 @@ const outputs = {
               "isRequired": true,
               "attributes": []
             },
+            "questionId": {
+              "name": "questionId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "question": {
               "name": "question",
-              "isArray": true,
+              "isArray": false,
               "type": {
                 "model": "Question"
               },
               "isRequired": false,
               "attributes": [],
-              "isArrayNullable": true,
               "association": {
-                "connectionType": "HAS_MANY",
-                "associatedWith": [
-                  "responseId"
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "questionId"
                 ]
               }
             },
@@ -148,6 +155,16 @@ const outputs = {
                 "fields": [
                   "i18n",
                   "order"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "responsesByQuestionId",
+                "queryField": "listResponseByQuestion",
+                "fields": [
+                  "questionId"
                 ]
               }
             },
@@ -220,6 +237,13 @@ const outputs = {
               "isRequired": false,
               "attributes": []
             },
+            "questionId": {
+              "name": "questionId",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "question": {
               "name": "question",
               "isArray": false,
@@ -229,11 +253,10 @@ const outputs = {
               "isRequired": false,
               "attributes": [],
               "association": {
-                "connectionType": "HAS_ONE",
-                "associatedWith": [
-                  "scenarioId"
-                ],
-                "targetNames": []
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "questionId"
+                ]
               }
             },
             "order": {
@@ -283,6 +306,16 @@ const outputs = {
                 "fields": [
                   "i18n",
                   "order"
+                ]
+              }
+            },
+            {
+              "type": "key",
+              "properties": {
+                "name": "scenariosByQuestionId",
+                "queryField": "listScenarioByQuestion",
+                "fields": [
+                  "questionId"
                 ]
               }
             },
@@ -341,13 +374,6 @@ const outputs = {
               "isRequired": true,
               "attributes": []
             },
-            "scenarioId": {
-              "name": "scenarioId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": true,
-              "attributes": []
-            },
             "scenario": {
               "name": "scenario",
               "isArray": false,
@@ -357,31 +383,26 @@ const outputs = {
               "isRequired": false,
               "attributes": [],
               "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "scenarioId"
-                ]
+                "connectionType": "HAS_ONE",
+                "associatedWith": [
+                  "questionId"
+                ],
+                "targetNames": []
               }
-            },
-            "responseId": {
-              "name": "responseId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": true,
-              "attributes": []
             },
             "response": {
               "name": "response",
-              "isArray": false,
+              "isArray": true,
               "type": {
                 "model": "Response"
               },
               "isRequired": false,
               "attributes": [],
+              "isArrayNullable": true,
               "association": {
-                "connectionType": "BELONGS_TO",
-                "targetNames": [
-                  "responseId"
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "questionId"
                 ]
               }
             },
@@ -430,26 +451,6 @@ const outputs = {
             {
               "type": "model",
               "properties": {}
-            },
-            {
-              "type": "key",
-              "properties": {
-                "name": "questionsByScenarioId",
-                "queryField": "listQuestionsByScenario",
-                "fields": [
-                  "scenarioId"
-                ]
-              }
-            },
-            {
-              "type": "key",
-              "properties": {
-                "name": "questionsByResponseId",
-                "queryField": "listQuestionsByResponse",
-                "fields": [
-                  "responseId"
-                ]
-              }
             },
             {
               "type": "key",
@@ -660,6 +661,28 @@ const outputs = {
               "isRequired": false,
               "attributes": []
             },
+            "isCompleted": {
+              "name": "isCompleted",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "assessor": {
+              "name": "assessor",
+              "isArray": true,
+              "type": "String",
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
+            },
+            "assessee": {
+              "name": "assessee",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -711,14 +734,13 @@ const outputs = {
                     ]
                   },
                   {
-                    "groupClaim": "cognito:groups",
                     "provider": "userPools",
-                    "allow": "groups",
+                    "ownerField": "assessor",
+                    "allow": "owner",
                     "operations": [
                       "read"
                     ],
-                    "groupsField": "assessor",
-                    "groupField": "groups"
+                    "identityClaim": "cognito:username"
                   },
                   {
                     "provider": "userPools",
@@ -730,11 +752,10 @@ const outputs = {
                     "identityClaim": "cognito:username"
                   },
                   {
-                    "groupClaim": "cognito:groups",
                     "provider": "userPools",
-                    "allow": "groups",
-                    "groupsField": "assessee",
-                    "groupField": "groups",
+                    "ownerField": "assessee",
+                    "allow": "owner",
+                    "identityClaim": "cognito:username",
                     "operations": [
                       "create",
                       "update",
@@ -778,6 +799,13 @@ const outputs = {
               "type": "String",
               "isRequired": true,
               "attributes": []
+            },
+            "order": {
+              "name": "order",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": []
             }
           }
         },
@@ -796,6 +824,13 @@ const outputs = {
               "isArray": false,
               "type": "String",
               "isRequired": true,
+              "attributes": []
+            },
+            "order": {
+              "name": "order",
+              "isArray": false,
+              "type": "Int",
+              "isRequired": false,
               "attributes": []
             }
           }
@@ -834,39 +869,32 @@ const outputs = {
         "Part1Answer": {
           "name": "Part1Answer",
           "fields": {
-            "questionId": {
-              "name": "questionId",
+            "scenarioId": {
+              "name": "scenarioId",
               "isArray": false,
-              "type": "ID",
+              "type": "String",
               "isRequired": true,
               "attributes": []
             },
             "responseId": {
               "name": "responseId",
-              "isArray": true,
-              "type": "ID",
-              "isRequired": false,
-              "attributes": [],
-              "isArrayNullable": true
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
             }
           }
         },
         "Part2Answer": {
           "name": "Part2Answer",
           "fields": {
-            "questionId": {
-              "name": "questionId",
-              "isArray": false,
-              "type": "ID",
-              "isRequired": true,
-              "attributes": []
-            },
             "scenarioId": {
               "name": "scenarioId",
-              "isArray": false,
-              "type": "AWSJSON",
+              "isArray": true,
+              "type": "String",
               "isRequired": false,
-              "attributes": []
+              "attributes": [],
+              "isArrayNullable": true
             }
           }
         },
@@ -884,6 +912,13 @@ const outputs = {
               "name": "title",
               "isArray": false,
               "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "order": {
+              "name": "order",
+              "isArray": false,
+              "type": "Int",
               "isRequired": false,
               "attributes": []
             },
@@ -1008,31 +1043,22 @@ const doSomething = async () => {
     authMode: 'apiKey'
   })
   const responseResult = (await clientAssessmentTopic.models.Response.list()).data.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-  console.log(`response length: ${responseResult.length}`)
   const topicResult = (await clientAssessmentTopic.models.Topic.list()).data.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-  let q = await topicResult[0].questions({ limit: 70 })
-  do {
-    console.log(`topic1 length: ${q.data.length}`)
-    q = (await topicResult[0].questions({ nextToken: q.nextToken }))
-  } while (q.nextToken)
-
-  q = await topicResult[1].questions()
-  do {
-    console.log(`topic2 length: ${q.data.length}`)
-    q = (await topicResult[1].questions({ nextToken: q.nextToken }))
-  } while (q.nextToken)
-
-  q = await topicResult[2].questions({ nextToken: q.nextToken })
-  do {
-    console.log(`topic3 length: ${q.data.length}`)
-    q = (await topicResult[2].questions({ nextToken: q.nextToken }))
-  } while (q.nextToken)
-
-  q = await topicResult[3].questions()
-  do {
-    console.log(`topic4 length: ${q.data.length}`)
-    q = (await topicResult[3].questions({ nextToken: q.nextToken }))
-  } while (q.nextToken)
+  for (const topic of topicResult) {
+    for (let i = 0; i < 10; i++) {
+      const question =  (await clientAssessmentTopic.models.Question.create({
+        topicId: topic.id
+      })).data
+      if (question) {
+        for (const response of responseResult) {
+          await clientAssessmentTopic.models.Response.update({
+            id: response.id,
+            questionId: question.id
+          })
+        }
+      }
+    } 
+  }
   // const scenarios4Result = await Promise.all(scenarios4.map(async (scenarioData, index) => {
   //   return (await clientAssessmentTopic.models.Scenario.create({
   //     scenario: scenarioData.scenario,
