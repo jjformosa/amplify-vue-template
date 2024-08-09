@@ -1,5 +1,5 @@
 import { generateClient } from 'aws-amplify/data'
-import type { SchemaAssessmentTopic } from '../data/resource'
+import type { SchemaAssessmentTopic } from 'amplify/data/resource'
 import { Amplify } from 'aws-amplify'
 // import outputs from '../../amplify_outputs.json'
 
