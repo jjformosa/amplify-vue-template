@@ -63,11 +63,7 @@ export const schemaTopic = a.schema({
   })
   .secondaryIndexes((index) => [
     index('i18n').queryField('listTopicsByLang').sortKeys(['order'])
-  ]),
-  searchResponseByQuestionId: a.query()
-  .arguments({
-    questionId: a.string().required()
-  })
+  ])
 })
 .authorization(allow => [
   allow.authenticated().to(['read']),
