@@ -35,7 +35,6 @@ export const schemaTopic = a.schema({
     index('i18n').queryField('listResponseByLang').sortKeys(['order'])
   ]),
   Scenario: a.model({
-    id: a.id().required(),
     scenario: a.string().required(),
     i18n: define.geti18n(),
     questionId: a.string(),

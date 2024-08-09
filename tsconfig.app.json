@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "amplify/**/*", "migration/**/*"],
+  "include": ["env.d.ts", "src/**/*", "amplify/**/*", "amplify/migration/**/*"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     "composite": true,
