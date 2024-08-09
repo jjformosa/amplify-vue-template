@@ -1,4 +1,4 @@
-import { a } from '@aws-amplify/backend'
+import { a, defineFunction } from '@aws-amplify/backend'
 import * as define from '../define'
 
 /**
@@ -6,22 +6,6 @@ import * as define from '../define'
  * createdAt, // default by model
  * updatedAt, // default by model
  */
-
-// export const TypeScenario = a.customType({
-//   scenario: a.string().required(),
-//   i18n: define.geti18n()
-// })
-
-// export const TypeResponse = a.customType({
-//   state: a.string().required(),
-//   degree: a.string().required(),
-//   i18n: define.geti18n()
-// })
-
-// export const TypeTopic = a.customType({
-//   title: a.string().required(),
-//   i18n: define.geti18n()
-// })
 
 export const schemaTopic = a.schema({
   Response: a.model({
@@ -62,7 +46,18 @@ export const schemaTopic = a.schema({
   })
   .secondaryIndexes((index) => [
     index('i18n').queryField('listTopicsByLang').sortKeys(['order'])
+  ]),
+  ListResponsesByQuestion: a.query()
+  .arguments({ questionId: a.string().required() })
+  .returns(a.ref('Response').array())
+  .authorization(allow => [
+    allow.publicApiKey(), 
+    allow.authenticated()
   ])
+  .handler(a.handler.custom({
+    dataSource: a.ref('Response'),
+    entry: '../../functions/data/ListResponsesByQuestion.js'
+  }))
 })
 .authorization(allow => [
   allow.authenticated().to(['read']),
