@@ -9,15 +9,19 @@ import { util } from '@aws-appsync/utils';
 //   })
 // I want to use questionId which is string, search for which questions of response contains ctx.args.questionId.
 export function request(ctx) {
-  const { questionId } = ctx.args;
-  const filter = { contains: (v) => util.strings.contains(v, questionId) };
-  return {
-    operation: 'Scan',
-    filter: filter,
-  };
+  const filter = JSON.parse(
+      util.transform.toDynamoDBFilterExpression({
+          and: [
+              { questions: { contains: ctx.args.questionId }},
+              { i18n: { eq: ctx.args.i18n }}
+          ]
+      }),
+  )
+  return { operation: 'Scan', filter }
 }
 // export function response with Response data
 export function response(ctx) {
-  const { items } = ctx.result;
-  return items;
+  const { items } = ctx.result
+  console.log(items)
+  return items
 } 

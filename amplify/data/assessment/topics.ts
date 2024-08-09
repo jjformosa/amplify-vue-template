@@ -1,4 +1,4 @@
-import { a, defineFunction } from '@aws-amplify/backend'
+import { a } from '@aws-amplify/backend'
 import * as define from '../define'
 
 /**
@@ -48,7 +48,10 @@ export const schemaTopic = a.schema({
     index('i18n').queryField('listTopicsByLang').sortKeys(['order'])
   ]),
   ListResponsesByQuestion: a.query()
-  .arguments({ questionId: a.string().required() })
+  .arguments({ 
+    questionId: a.string().required(),
+    i18n: a.string().default('zh_tw').required()
+   })
   .returns(a.ref('Response').array())
   .authorization(allow => [
     allow.publicApiKey(), 
